@@ -18,5 +18,5 @@ REM Create + activate
 CALL conda create -n rlgym-trueskill python=3.9 -y
 CALL conda activate rlgym-trueskill
 
-pip install rlgym==1.2.2 git+https://github.com/AechPro/rocket-league-gym-sim@main rocketsim trueskill==0.4.5 setuptools wheel build twine pytest
+pip install rlgym==2.0.1 trueskill==0.4.5 setuptools wheel build twine pytest
 pause
