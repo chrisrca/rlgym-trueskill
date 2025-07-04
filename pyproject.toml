@@ -12,7 +12,7 @@ license = { file = "LICENSE" }
 requires-python = "==3.9.*"
 dependencies = [
     "rlgym==2.0.1",
-    "rlgym[rl]==2.0.1"
+    "rlgym[rl]==2.0.1",
     "rlgym[rl-sim]==2.0.1",
     "rlgym[rl-rlviser]==2.0.1",
     "trueskill==0.4.5",
