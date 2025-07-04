@@ -2,7 +2,8 @@ from rlgym.api import RLGym
 from rlgym.rocket_league.done_conditions import GoalCondition, NoTouchTimeoutCondition
 from rlgym.rocket_league.rlviser import RLViserRenderer
 from rlgym.rocket_league.sim import RocketSimEngine
-from rlgym.rocket_league.state_mutators import KickoffMutator
+from rlgym.rocket_league.state_mutators import KickoffMutator, MutatorSequence
+from rlgym_tools.rocket_league.state_mutators.variable_team_size_mutator import VariableTeamSizeMutator
 from rlgym_trueskill.matchmaking.matchmaker import Matchmaker
 from rlgym_trueskill.rewards.dummy_reward import DummyReward
 from multiprocessing import Process
@@ -40,9 +41,21 @@ class TrueSkillWorker:
             raise ValueError("No observation builder provided.")
         else:
             self.obs_builder = obs_builder
+        
+        # Build mode_weights based on enabled gamemodes
+        enabled_modes = [(int(mode[0]), int(mode[0])) for mode, enabled in self.gamemodes.items() if enabled]
+        if not enabled_modes:
+            raise ValueError("At least one gamemode must be enabled in gamemodes.")
+        weight = 1.0 / len(enabled_modes)
+        mode_weights = {mode: weight for mode in enabled_modes}
+
+        state_mutator = MutatorSequence(
+            VariableTeamSizeMutator(mode_weights=mode_weights),
+            KickoffMutator(),
+        )
 
         self.match = RLGym(
-            state_mutator=KickoffMutator(), # Use KickoffMutator to set up the initial state      
+            state_mutator=state_mutator, # Default Rocket League kickoff with teamsizes varying 
             obs_builder=obs_builder,    # User provided observation builder 
             action_parser=action_parser,    # User provided action parser
             reward_fn=DummyReward(),    # We don't need rewards
