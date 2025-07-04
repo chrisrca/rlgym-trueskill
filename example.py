@@ -10,7 +10,7 @@ if __name__ == "__main__":
     action_parser = RepeatAction(AdvancedLookupTableAction(3,3,3,16,True), repeats=tick_skip)
 
     obs_builder = DefaultObs(
-        zero_padding=None,
+        zero_padding=3,
         pos_coef=np.asarray([1 / common_values.SIDE_WALL_X, 1 / common_values.BACK_NET_Y, 1 / common_values.CEILING_Z]),
         ang_coef=1 / np.pi,
         lin_vel_coef=1 / common_values.CAR_MAX_SPEED,
