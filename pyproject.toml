@@ -11,8 +11,11 @@ authors = [{ name = "chrisrca" }, { name = "ericle85" }]
 license = { file = "LICENSE" }
 requires-python = "==3.9.*"
 dependencies = [
-    "rlgym==2.0.1",
+    "rlgym[all]==2.0.1",
     "trueskill==0.4.5",
+    "rlgym-tools==2.3.9",
+    "git+https://github.com/AechPro/rlgym-ppo",
+    "rlgym[rl-sim]",
     "setuptools",
     "wheel",
     "build",
