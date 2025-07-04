@@ -3,7 +3,7 @@ from rlgym.rocket_league.done_conditions import GoalCondition, NoTouchTimeoutCon
 from rlgym.rocket_league.rlviser import RLViserRenderer
 from rlgym.rocket_league.sim import RocketSimEngine
 from rlgym.rocket_league.state_mutators import KickoffMutator, MutatorSequence
-from rlgym_tools.rocket_league.state_mutators.variable_team_size_mutator import VariableTeamSizeMutator
+from rlgym.rocket_league.state_mutators import FixedTeamSizeMutator
 from rlgym_trueskill.matchmaking.matchmaker import Matchmaker
 from rlgym_trueskill.rewards.dummy_reward import DummyReward
 from multiprocessing import Process
@@ -29,41 +29,11 @@ class TrueSkillWorker:
         self.render = render
         self.wandb = wandb
         self.model_folder = model_folder
+        self.action_parser = action_parser
+        self.obs_builder = obs_builder
         self.device = device
         self.gamemodes = gamemodes
-
-        if action_parser is None:
-            raise ValueError("No action parser provided.")
-        else:
-            self.action_parser = action_parser
-
-        if obs_builder is None:
-            raise ValueError("No observation builder provided.")
-        else:
-            self.obs_builder = obs_builder
-        
-        # Build mode_weights based on enabled gamemodes
-        enabled_modes = [(int(mode[0]), int(mode[0])) for mode, enabled in self.gamemodes.items() if enabled]
-        if not enabled_modes:
-            raise ValueError("At least one gamemode must be enabled in gamemodes.")
-        weight = 1.0 / len(enabled_modes)
-        mode_weights = {mode: weight for mode in enabled_modes}
-
-        state_mutator = MutatorSequence(
-            VariableTeamSizeMutator(mode_weights=mode_weights),
-            KickoffMutator(),
-        )
-
-        self.match = RLGym(
-            state_mutator=state_mutator, # Default Rocket League kickoff with teamsizes varying 
-            obs_builder=obs_builder,    # User provided observation builder 
-            action_parser=action_parser,    # User provided action parser
-            reward_fn=DummyReward(),    # We don't need rewards
-            termination_cond=GoalCondition(),   # Terminate when a goal is scored   
-            truncation_cond=NoTouchTimeoutCondition(timeout_seconds=timeout_seconds),   # Terminate after a timeout
-            transition_engine=RocketSimEngine(),    # Use RocketSimEngine for the simulation
-            renderer=RLViserRenderer(), # Use RLViserRenderer for rendering
-        )
+        self.timeout_seconds = timeout_seconds
 
     def run(self):
         print("Starting TrueSkillWorkers...")
@@ -73,7 +43,23 @@ class TrueSkillWorker:
         for mode, enabled in self.gamemodes.items():
             if enabled:
                 team_size = int(mode[0])
-                matchmaker = Matchmaker(team_size=team_size, match=self.match)
+                # Create the RLGym instance
+                match = RLGym(
+                    state_mutator=MutatorSequence(
+                        FixedTeamSizeMutator(team_size,team_size),
+                        KickoffMutator(),
+                    ),
+                    obs_builder=self.obs_builder,
+                    action_parser=self.action_parser,
+                    reward_fn=DummyReward(),
+                    termination_cond=GoalCondition(),
+                    truncation_cond=NoTouchTimeoutCondition(timeout_seconds=self.timeout_seconds),
+                    transition_engine=RocketSimEngine(),
+                    renderer=RLViserRenderer(),
+                )
+                
+                # Pass the ready-made match to matchmaker
+                matchmaker = Matchmaker(team_size=team_size, match=match)
                 processes.append(Process(target=matchmaker.run))
 
         for p in processes:

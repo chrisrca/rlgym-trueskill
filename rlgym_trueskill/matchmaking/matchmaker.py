@@ -1,9 +1,10 @@
+from rlgym.api import RLGym
 from rlgym_ppo.util import RLGymV2GymWrapper
 import os
 import time
 
 class Matchmaker:
-    def __init__(self, team_size, match):
+    def __init__(self, team_size, match: RLGym):
         self.team_size = team_size
         self.match = match
 
@@ -13,7 +14,6 @@ class Matchmaker:
         print(f"Process ID: {os.getpid()}")
         
         # Test wrapping 
-        # Currently getting IndexError: list index out of range
         try:
             RLGymV2GymWrapper(self.match)
         except Exception as e:
