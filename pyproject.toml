@@ -31,5 +31,8 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+[tool.setuptools]
+packages = ["rlgym_trueskill"]
+
 [project.urls]
 Repository = "https://github.com/chrisrca/rlgym-trueskill"
