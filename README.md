@@ -1,14 +1,13 @@
-rlgym-trueskill
+# rlgym-trueskill
+
 A Python package for implementing TrueSkill-based ranking in RLGym environments.
-Installation
-pip install rlgym-trueskill
 
-Usage
-from rlgym_trueskill import TrueSkillWorkers
+Installation:
 
-# Initialize the TrueSkillWorkers class
-workers = TrueSkillWorkers()
-# Add your implementation here
+    pip install rlgym-trueskill
 
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
+# Development Setup:
+
+- Install [Anaconda](https://www.anaconda.com/download/success), we use this to create consistent environments.
+- ```conda-env.bat``` to create rlgym-trueskill python environment.
+- ```build.bat``` to build to wheel.
