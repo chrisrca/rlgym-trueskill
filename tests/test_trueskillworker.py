@@ -1,3 +1,3 @@
-def example_test():
+def test_example_test():
     """A blank test that always passes to verify ci checks."""
     assert True
