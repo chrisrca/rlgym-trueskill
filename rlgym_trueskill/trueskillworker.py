@@ -71,7 +71,7 @@ class TrueSkillWorker:
                         obs_builder=self.obs_builder,
                         action_parser=self.action_parser,
                         reward_function=DummyReward(),
-                        terminal_conditions=[TimeoutCondition(self.fps * 500), GoalScoredCondition()],
+                        terminal_conditions=[TimeoutCondition(self.fps * self.timeout_seconds), GoalScoredCondition()],
                         spawn_opponents=True,
                         team_size=team_size,
                     )
