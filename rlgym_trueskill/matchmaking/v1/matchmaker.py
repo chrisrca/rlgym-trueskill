@@ -9,13 +9,6 @@ class Matchmaker:
         self.match = match
 
     def run(self):
-        print(f"Starting matchmaker for team size {self.team_size}")
+        print(f"\nStarting matchmaker for team size {self.team_size}")
         print(f"Match: {self.match}")
         print(f"Process ID: {os.getpid()}")
-        
-        # Test wrapping 
-        try:
-            RLGymV2GymWrapper(self.match)
-        except Exception as e:
-            print(f"Error wrapping match: {e}")
-            return

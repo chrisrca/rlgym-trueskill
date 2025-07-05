@@ -18,6 +18,7 @@ dependencies = [
     "trueskill==0.4.5",
     "rlgym-tools==2.3.9",
     "rlgym-ppo @ git+https://github.com/AechPro/rlgym-ppo.git@main",
+    "rocket-league-gym-sim @ git+https://github.com/AechPro/rocket-league-gym-sim.git@main",
     "setuptools",
     "wheel",
     "build",
