@@ -12,7 +12,13 @@ license = { file = "LICENSE" }
 requires-python = "==3.9.*"
 dependencies = [
     "rlgym==2.0.1",
+    "rlgym[rl]==2.0.1",
+    "rlgym[rl-sim]==2.0.1",
+    "rlgym[rl-rlviser]==2.0.1",
     "trueskill==0.4.5",
+    "rlgym-tools==2.3.9",
+    "rlgym-ppo @ git+https://github.com/AechPro/rlgym-ppo.git@main",
+    "rocket-league-gym-sim @ git+https://github.com/AechPro/rocket-league-gym-sim.git@main",
     "setuptools",
     "wheel",
     "build",
@@ -25,6 +31,9 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+
+[tool.setuptools]
+packages = ["rlgym_trueskill"]
 
 [project.urls]
 Repository = "https://github.com/chrisrca/rlgym-trueskill"
