@@ -2,7 +2,7 @@ import numpy as np
 from rlgym_sim.gym import Gym
 from tqdm import tqdm
 
-def generate_episode(ModelPolicy, env: Gym, policies, evaluate=False, progress=False, render=False):
+def generate_episode(ModelPolicy, device, env: Gym, policies, evaluate=False, progress=False, render=False):
     """
     Run a single match in the environment with the given policies and return the result.
 
@@ -32,12 +32,10 @@ def generate_episode(ModelPolicy, env: Gym, policies, evaluate=False, progress=F
         if not isinstance(observations, list):
             observations = [observations]
 
-        print(ModelPolicy.get_actions(observations[0], env.device))  # Debugging line to check actions
-
         # Zip policies and observations correctly
         for policy, obs in zip(policies, observations):
             if isinstance(policy, ModelPolicy):
-                actions = policy.get_actions(obs)
+                actions = policy.get_actions(obs, device)
                 all_actions.append(actions)
             else:
                 raise ValueError(f"Unsupported policy type: {type(policy)}")

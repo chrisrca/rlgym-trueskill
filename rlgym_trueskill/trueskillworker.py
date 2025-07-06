@@ -74,8 +74,6 @@ class TrueSkillWorker:
         self.gamemodes = gamemodes
 
     def _v1_worker(self, team_size):
-        from rlgym_sim.utils.action_parsers.continuous_act import ContinuousAction
-        from rlgym_sim.utils.gamestates.game_state import GameState, PlayerData
         from rlgym_sim.envs import Match
         from rlgym_sim.utils.terminal_conditions.common_conditions import GoalScoredCondition, TimeoutCondition, NoTouchTimeoutCondition
         from rlgym_sim.utils.state_setters.default_state import DefaultState
@@ -90,7 +88,7 @@ class TrueSkillWorker:
             spawn_opponents=True,
             team_size=team_size,
         )
-        Matchmaker(ModelPolicy=self.ModelPolicy, match=match).run()
+        Matchmaker(ModelPolicy=self.ModelPolicy, match=match, device=self.device).run()
 
     def run(self):
         print("Starting TrueSkillWorkers...")

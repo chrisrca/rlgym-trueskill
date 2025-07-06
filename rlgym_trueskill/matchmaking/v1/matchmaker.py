@@ -1,4 +1,4 @@
-from rlgym.api import RLGym
+from rlgym_sim.envs import Match
 from rlgym_sim.gym import Gym
 from trueskill import rate
 from rlgym_trueskill.matchmaking.v1.utils.dynamicgmsetter import DynamicGMSetter
@@ -9,11 +9,12 @@ import os
 import torch
 
 class Matchmaker:
-    def __init__(self, ModelPolicy, match, past_version_prob=0.75, sigma_target=2, 
+    def __init__(self, ModelPolicy, match: Match, device="cpu", past_version_prob=0.75, sigma_target=2, 
                  dynamic_gm=True, gamemode_weights=None, gamemode=None, render=True):
 
         self.ModelPolicy = ModelPolicy
         self.match=match
+        self.device = device
         self.past_version_prob=past_version_prob
         self.sigma_target=2
         self.sigma_target = sigma_target
@@ -24,7 +25,7 @@ class Matchmaker:
         if self.gamemode_weights is not None:
             assert np.isclose(sum(self.gamemode_weights.values()), 1), "gamemode_weights must sum to 1"
         state_setter = DynamicGMSetter(match._state_setter)
-        self.set_team_size = state_setter.set_team_size
+        self.set_team_size = state_setter.set_team_size(blue=match.team_size, orange=match.team_size)
         match._state_setter = state_setter
         self.env = Gym(
             match=self.match,
